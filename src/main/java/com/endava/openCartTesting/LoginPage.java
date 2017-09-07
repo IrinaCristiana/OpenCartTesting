@@ -28,7 +28,6 @@ public class LoginPage {
         passwordBox.sendKeys(password);
         loginButton.click();
 
-        MyAccountPage myAccountPage = PageFactory.initElements(webDriver, MyAccountPage.class);
-        return myAccountPage;
+        return PageFactory.initElements(webDriver, MyAccountPage.class);
     }
 }

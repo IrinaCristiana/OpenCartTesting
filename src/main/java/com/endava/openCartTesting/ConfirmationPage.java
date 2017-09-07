@@ -19,7 +19,6 @@ public class ConfirmationPage {
     public EditAccountPage goToEditAccountPage() {
         editAccountMenuItem.click();
 
-        EditAccountPage editAccountPage = PageFactory.initElements(webDriver, EditAccountPage.class);
-        return editAccountPage;
+       return PageFactory.initElements(webDriver, EditAccountPage.class);
     }
 }

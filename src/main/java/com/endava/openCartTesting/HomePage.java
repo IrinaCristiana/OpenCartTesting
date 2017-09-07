@@ -28,8 +28,7 @@ public class HomePage {
         myAccountButton.click();
         registerButton.click();
 
-        CreateAccountPage accountPage = PageFactory.initElements(webDriver, CreateAccountPage.class);
-        return accountPage;
+        return PageFactory.initElements(webDriver, CreateAccountPage.class);
     }
     //Navigate to My Account -> Login
     public LoginPage goToLoginPage() {
@@ -37,8 +36,7 @@ public class HomePage {
         myAccountButton.click();
         loginButton.click();
 
-        LoginPage loginPage = PageFactory.initElements(webDriver, LoginPage.class);
-        return loginPage;
+       return PageFactory.initElements(webDriver, LoginPage.class);
     }
 
 }

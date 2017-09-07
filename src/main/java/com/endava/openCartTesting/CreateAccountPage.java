@@ -56,7 +56,7 @@ public class CreateAccountPage {
         //Submit the form
         continueButton.click();
 
-        ConfirmationPage confirmationPage = PageFactory.initElements(webDriver, ConfirmationPage.class);
-        return confirmationPage;
+        return PageFactory.initElements(webDriver, ConfirmationPage.class);
+
     }
 }

@@ -20,7 +20,6 @@ public class ProductsPage {
     public SelectedProductPage selectProduct() {
         product.click();
 
-        SelectedProductPage selectedProductPage = PageFactory.initElements(webDriver, SelectedProductPage.class);
-        return selectedProductPage;
+        return PageFactory.initElements(webDriver, SelectedProductPage.class);
     }
 }

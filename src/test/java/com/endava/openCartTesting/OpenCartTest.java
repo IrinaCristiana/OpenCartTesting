@@ -3,6 +3,7 @@ package com.endava.openCartTesting;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.sql.*;
 
 public class OpenCartTest extends TestBaseClass {
@@ -43,21 +44,13 @@ public class OpenCartTest extends TestBaseClass {
     }
 
     @Test
-    public void connectToDataBase() throws SQLException {
+    public void connectToDataBaseTest() throws SQLException, IOException {
         //Connect to database
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://192.168.164.15:3306/bitnami_opencart", "root", "root");
-        if (connection != null) {
-            System.out.println("Connected to the database");
-        }
-        //Create Query to the Database using the Statement Object.
-        Statement statement = connection.createStatement();
+        DataBaseConnection dataBaseConnection = new DataBaseConnection();
+        dataBaseConnection.connectToDataBase();
 
-        //Add a new entry for your account in the oc_address
-        String query = "INSERT INTO oc_address (customer_id, firstname, lastname, company, address_1,address_2, city, postcode, country_id, custom_field)\n" +
-                "VALUES ((select customer_id from oc_customer where email='irina.cristea@endava.com'),'Irina', 'Cristea','Endava', 'test address 1', 'test address 2','Bucharest','122222', (select country_id from oc_country where name='Romania'), '0')";
-        statement.executeUpdate(query);
-        statement.close();
-        connection.close();
+        //Insert a new address
+        dataBaseConnection.insertAddress();
 
         //Login in application
         LoginPage loginPage = homePage.goToLoginPage();
@@ -77,18 +70,16 @@ public class OpenCartTest extends TestBaseClass {
     }
 
     @Test
-    public void productSelectionTest() throws SQLException, InterruptedException {
+    public void productSelectionTest() throws SQLException, InterruptedException, IOException {
         //Connect to database
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://192.168.164.15:3306/bitnami_opencart", "root", "root");
-        if (connection != null) {
-            System.out.println("Connected to the database");
-        }
-        //Create Query to the Database using the Statement Object.
-        Statement statement = connection.createStatement();
+        DataBaseConnection dataBaseConnection = new DataBaseConnection();
+        dataBaseConnection.connectToDataBase();
 
         //Login in the application
         LoginPage loginPage = homePage.goToLoginPage();
         MyAccountPage myAccountPage = loginPage.login("irina.cristea@endava.com", "Password1");
+
+        //Go to Products Page
         ProductsPage productsPage = myAccountPage.goToProductsPage();
 
         //Click on a random product from Home Page
@@ -96,24 +87,16 @@ public class OpenCartTest extends TestBaseClass {
         selectedProductPage.addToCart();
         Thread.sleep(4000);
 
-        //From database (oc_cart) for the current session increase quantity by 1
-        String query = "UPDATE oc_cart\n" +
-                "SET quantity = quantity+1\n" +
-                "WHERE customer_id = 3";
+        //Update value
+        dataBaseConnection.updateValue();
 
-        statement.executeUpdate(query);
+        //Verify in the UI that the values has been increased
+        Integer qty = dataBaseConnection.getValue();
 
-        String queryResult = "SELECT quantity\n" +
-                "FROM oc_cart\n" +
-                "WHERE customer_id = 3";
+        System.out.println(qty);
 
-        ResultSet result = statement.executeQuery(queryResult);
-        if (result.next()) {
-            System.out.println("Updated quantity: "+ result.getString(1));
+        Assert.assertEquals("2",qty.toString());
 
-            //Verify in the UI that the values has been increased
-            Assert.assertEquals("6", result.getString(1));
-        }
         //Log out
         myAccountPage.clickOnMyAccount();
         myAccountPage.logout();

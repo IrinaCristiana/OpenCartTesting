@@ -43,7 +43,6 @@ public class MyAccountPage {
     public ProductsPage goToProductsPage() {
         logo.click();
 
-        ProductsPage productsPage = PageFactory.initElements(webDriver, ProductsPage.class);
-        return productsPage;
+        return PageFactory.initElements(webDriver, ProductsPage.class);
     }
 }
